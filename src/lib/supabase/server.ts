@@ -1,0 +1,33 @@
+import { createServerClient } from "@supabase/ssr";
+import { cookies } from "next/headers";
+
+/**
+ * Cliente de Supabase para el servidor (Server Components, Route Handlers,
+ * Server Actions). Estructura recomendada — la conexión real depende de las
+ * variables de entorno definidas en `.env.local`.
+ */
+export function createClient() {
+  const cookieStore = cookies();
+
+  return createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return cookieStore.getAll();
+        },
+        setAll(cookiesToSet) {
+          try {
+            cookiesToSet.forEach(({ name, value, options }) =>
+              cookieStore.set(name, value, options)
+            );
+          } catch {
+            // El método `setAll` fue llamado desde un Server Component.
+            // Puede ignorarse si hay middleware refrescando la sesión.
+          }
+        },
+      },
+    }
+  );
+}
