@@ -42,37 +42,63 @@ humano fija el objetivo; el enjambre ejecuta.
 
 | # | ÁREA | NODO DESPLEGADO | MISIÓN | OUTPUT NO NEGOCIABLE | ESTADO |
 |:-:|:--|:--|:--|:--|:-:|
-| 01 | **Contenido** | `01-thumbnail-architect` | Ingeniería de la atención / CTR | Wireframe SVG (proporción áurea) + prompt Midjourney v6 paramétrico | 🟢 `ARMED` |
-| 02 | **Edición** | `02-algorithmic-editor` | Timeline de ritmo asfixiante | Tabla `Timestamp \| Jump Cut \| B-Roll \| SFX` | 🟢 `ARMED` |
-| 03 | **Contenido** | `03-viral-hook-engine` | Retención psicológica >75% | Guion `Gancho→Navaja→Artefacto→Extracción` + lenguaje corporal | 🟢 `ARMED` |
-| 04 | **Prospección** | `04-b2b-outbound-sniper` | Extracción high-ticket | Cold emails asimétricos (ingeniero → ingeniero) | 🟢 `ARMED` |
-| 05 | **Diseño UI** | `05-ui-visual-mapper` | Reducción de ruido cognitivo | Componentes React/Tailwind data-first (charts, heatmaps) | 🟢 `ARMED` |
-| 06 | **Inteligencia** | `06-social-listening-radar` | Detección de tendencias emergentes | Matriz de convergencia tecnológica semanal | 🟢 `ARMED` |
+| 01 | **Contenido** | `thumbnail-architect` | Ingeniería de la atención / CTR | Wireframe SVG (proporción áurea) + prompt Midjourney v6 paramétrico | 🟢 `ARMED` |
+| 02 | **Edición** | `algorithmic-editor` | Timeline de ritmo asfixiante | Tabla `Timestamp \| Jump Cut \| B-Roll \| SFX` | 🟢 `ARMED` |
+| 03 | **Contenido** | `viral-hook-engine` | Retención psicológica >75% | Guion `Gancho→Navaja→Artefacto→Extracción` + lenguaje corporal | 🟢 `ARMED` |
+| 04 | **Prospección** | `b2b-outbound-sniper` | Extracción high-ticket | Cold emails asimétricos (ingeniero → ingeniero) | 🟢 `ARMED` |
+| 05 | **Diseño UI** | `ui-visual-mapper` | Reducción de ruido cognitivo | Componentes React/Tailwind data-first (charts, heatmaps) | 🟢 `ARMED` |
+| 06 | **Inteligencia** | `social-listening-radar` | Detección de tendencias emergentes | Matriz de convergencia tecnológica semanal | 🟢 `ARMED` |
 | ⚙ | **Orquestación** | `C2 / operator loop` | Despacho y relevo del enjambre | Coordinación intención → ejecución | 🟢 `ARMED` |
+
+---
+
+## ▶ CÓMO DESPLEGAR EL ENJAMBRE
+
+Abre Claude Code en la raíz del repositorio. Los 6 nodos se cargan
+automáticamente como skills. Dos formas de activarlos:
+
+1. **Invocación directa**: `/thumbnail-architect`, `/viral-hook-engine`, etc.
+2. **Activación por contexto**: pide en lenguaje natural — _"necesito la
+   miniatura y el guion para un video sobre X"_ — y Claude despacha el nodo
+   correspondiente según su misión declarada.
+
+Para levantar la superficie de mando web:
+
+```bash
+npm ci        # instalar dependencias
+npm run dev   # http://localhost:3000
+npm run lint  # verificación de código
+npm run build # build de producción
+```
+
+Supabase es opcional hasta que definas las variables en `.env.local`
+(copia `.env.example`). Sin ellas, la app opera en modo sin persistencia.
 
 ---
 
 ## ▦ ARQUITECTURA DE DESPLIEGUE
 
 ```
-solopreneur-os-2026/
+SaaSFactory_SoloprenurOS_V1/
 ├── .claude/
-│   └── skills/                         # ▶ EL ENJAMBRE (6 nodos autónomos)
-│       ├── 01-thumbnail-architect.md   # NODO VISUAL     · CTR / SVG
-│       ├── 02-algorithmic-editor.md    # NODO POST-PROD  · edición cinemática
-│       ├── 03-viral-hook-engine.md     # NODO COPY       · retención psicológica
-│       ├── 04-b2b-outbound-sniper.md   # NODO PROSPECCIÓN· outbound high-ticket
-│       ├── 05-ui-visual-mapper.md      # NODO INTERFAZ   · data-first UI
-│       └── 06-social-listening-radar.md# NODO INTEL      · radar de tendencias
+│   └── skills/                          # ▶ EL ENJAMBRE (6 nodos autónomos)
+│       ├── thumbnail-architect/         # NODO VISUAL     · CTR / SVG
+│       ├── algorithmic-editor/          # NODO POST-PROD  · edición cinemática
+│       ├── viral-hook-engine/           # NODO COPY       · retención psicológica
+│       ├── b2b-outbound-sniper/         # NODO PROSPECCIÓN· outbound high-ticket
+│       ├── ui-visual-mapper/            # NODO INTERFAZ   · data-first UI
+│       └── social-listening-radar/      # NODO INTEL      · radar de tendencias
+│           (cada nodo = SKILL.md con frontmatter, invocable desde Claude Code)
+├── .github/
+│   └── workflows/ci.yml                 # CI: lint + build en cada push/PR
 ├── src/
-│   ├── app/                            # Next.js App Router (superficie de mando)
-│   ├── components/                     # Componentes de UI
+│   ├── app/                             # Next.js App Router (superficie de mando)
 │   ├── infrastructure/
-│   │   └── agent-payments/             # ⚠️ VACÍO DE INFRAESTRUCTURA A2A (ver README)
-│   └── lib/
-│       └── supabase/                   # Persistencia (browser/server clients)
-├── supabase/                           # Migraciones + Edge Functions
-└── public/                             # Activos estáticos
+│   │   └── agent-payments/              # ⚠️ VACÍO DE INFRAESTRUCTURA A2A (ver README)
+│   ├── lib/
+│   │   └── supabase/                    # Persistencia (browser/server/proxy clients)
+│   └── proxy.ts                         # Refresh de sesión Supabase (Next 16)
+└── supabase/                            # Migraciones + Edge Functions (por poblar)
 ```
 
 ---
